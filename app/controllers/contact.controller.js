@@ -22,13 +22,13 @@ const ApiError = require("../api-error");
 //     res.send({ message: "Delete handler" });
 // };
 
-exports.deleteAll = (req, res) => {
-    res.send({ message: "DeleteAll handler" });
-};
+// exports.deleteAll = (req, res) => {
+//     res.send({ message: "DeleteAll handler" });
+// };
 
-exports.findAllFavorite = (req, res) => {
-    res.send({ message: "FindAllFavorite handler" });
-};
+// exports.findAllFavorite = (req, res) => {
+//     res.send({ message: "FindAllFavorite handler" });
+// };
 
 exports.create = async (req, res, next) => {
     if (!req.body?.name) {
@@ -125,6 +125,20 @@ exports.findAllFavorite = async (req, res, next) => {
     } catch (error) {
         return next(
             new ApiError(500, "An error occurred while retrieving favorite contacts")
+        );
+    }
+};
+
+exports.deleteAll = async (req, res, next) => {
+    try {
+        const contactService = new ContactService(MongoDB.client);
+        const deleteCount = await contactService.deleteAll();
+        return res.send({
+            message: `${deleteCount} contacts were deleted successfully`,
+        });
+    } catch (error) {
+        return next(
+            new ApiError(500, "An error occurred while removing all contacts")
         );
     }
 };
