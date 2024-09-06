@@ -6,13 +6,13 @@ const ApiError = require("../api-error");
 //     res.send({ message: "Create handler" });
 // };
 
-exports.findAll = (req, res) => {
-    res.send({ message: "FindAll handler" });
-};
+// exports.findAll = (req, res) => {
+//     res.send({ message: "FindAll handler" });
+// };
 
-exports.findOne = (req, res) => {
-    res.send({ message: "FindOne handler" });
-};
+// exports.findOne = (req, res) => {
+//     res.send({ message: "FindOne handler" });
+// };
 
 exports.update = (req, res) => {
     res.send({ message: "Update handler" });
@@ -64,3 +64,21 @@ exports.findAll = async (req, res, next) => {
 
     return res.send(documents);
 }
+
+exports.findOne = async (req, res, next) => {
+    try {
+        const contactService = new ContactService(MongoDB.client);
+        const document = await contactService.findById(req.params.id);
+        if (!document) {
+            return next(ApiError(404, "Contact not found"));
+        }
+        return res.send(document);
+    } catch (error) {
+        return next(
+            new ApiError(
+                500,
+                `Error retrieving contact with id=${req.params.id}`
+            )
+        );
+    }
+};

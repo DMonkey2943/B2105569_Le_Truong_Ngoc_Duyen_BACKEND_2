@@ -41,6 +41,12 @@ class ContactService {
             name: { $regex: new RegExp(new RegExp(name)), $option: "i" },
         });
     }
+
+    async findById(id) {
+        return await this.Contact.findOne({
+            _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
+        });
+    }
 }
 
 module.exports = ContactService;
